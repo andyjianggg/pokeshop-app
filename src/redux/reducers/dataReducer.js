@@ -1,7 +1,8 @@
-import { LOADING_DATA, SET_POKEMON } from "../types";
+import { LOADING_DATA, SET_POKEMON, SET_CART } from "../types";
 
 const initialState = {
   pokemon: [],
+  cart: [],
   loading: false,
 };
 
@@ -17,6 +18,12 @@ export default function (state = initialState, action) {
         ...state,
         loading: false,
         pokemon: action.payload,
+      };
+    case SET_CART:
+      return {
+        ...state,
+        loading: false,
+        cart: action.payload,
       };
     default:
       return state;

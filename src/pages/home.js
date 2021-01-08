@@ -14,23 +14,16 @@ import { getPokemon } from "../redux/actions/dataActions";
 
 class home extends Component {
   componentDidMount() {
-    this.props.getPokemon();
+    this.props.getPokemon(this.props.authenticated);
   }
   render() {
-    const { pokemon, loading } = this.props.data;
+    const { pokemon, loading, cart } = this.props.data;
     const currType = this.props.match.params.type
       ? this.props.match.params.type
       : "";
     const currRegion = this.props.match.params.region
       ? this.props.match.params.region
       : "";
-    const token = localStorage.userIdToken;
-    let pokemonCart = [];
-    if (token) {
-      const decodedToken = jwtDecode(token);
-      const userEmail = decodedToken.email;
-      pokemonCart = JSON.parse(localStorage.getItem(userEmail) || "[]");
-    }
 
     let pokemonDisplay = !loading ? (
       pokemon.map((pokemon) => (
@@ -82,7 +75,7 @@ class home extends Component {
     );
 
     let pokemonDisplayCart = !loading ? (
-      pokemonCart.map((pokemon) => (
+      cart.map((pokemon) => (
         <Pokemon key={pokemon.pokedexId} pokemon={pokemon} />
       ))
     ) : (
@@ -117,6 +110,11 @@ home.propTypes = {
 
 const mapStateToProps = (state) => ({
   data: state.data,
+  authenticated: state.user.authenticated,
 });
 
-export default connect(mapStateToProps, { getPokemon })(home);
+const mapActionsToProps = {
+  getPokemon,
+};
+
+export default connect(mapStateToProps, mapActionsToProps)(home);

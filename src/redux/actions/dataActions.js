@@ -4,11 +4,16 @@ import {
   SET_POKEMON,
   CLEAR_ERRORS,
   LOADING_UI,
+  SET_CART,
 } from "../types";
 import axios from "axios";
 
+const hello = () => {
+  console.log("hello");
+};
+
 // Get all pokemon
-export const getPokemon = () => (dispatch) => {
+export const getPokemon = (authenticated) => (dispatch) => {
   dispatch({ type: LOADING_DATA });
   axios
     .get("/pokemon")
@@ -17,6 +22,25 @@ export const getPokemon = () => (dispatch) => {
         type: SET_POKEMON,
         payload: res.data,
       });
+      if (authenticated) {
+        hello();
+        dispatch({ type: LOADING_DATA });
+        axios
+          .get("/user/cart")
+          .then((res) => {
+            dispatch({
+              type: SET_CART,
+              payload: res.data,
+            });
+            dispatch({ type: CLEAR_ERRORS });
+          })
+          .catch((error) => {
+            dispatch({
+              type: SET_ERRORS,
+              payload: error.response.data,
+            });
+          });
+      }
     })
     .catch((error) => {
       console.log(error);
@@ -45,6 +69,83 @@ export const addOnePokemon = (pokemonData, formData, history) => (dispatch) => {
             payload: error.response.data,
           });
         });
+    })
+    .catch((error) => {
+      dispatch({
+        type: SET_ERRORS,
+        payload: error.response.data,
+      });
+    });
+};
+
+// Add a pokemon to cart
+export const handleCart = (pokemonId, cartAction) => (dispatch) => {
+  dispatch({ type: LOADING_DATA });
+  axios
+    .post(`/pokemon/${pokemonId}/${cartAction}`)
+    .then(() => {
+      axios
+        .get("/user/cart")
+        .then((res) => {
+          dispatch({
+            type: SET_CART,
+            payload: res.data,
+          });
+          dispatch({ type: CLEAR_ERRORS });
+        })
+        .catch((error) => {
+          dispatch({
+            type: SET_ERRORS,
+            payload: error.response.data,
+          });
+        });
+    })
+    .catch((error) => {
+      dispatch({
+        type: SET_ERRORS,
+        payload: error.response.data,
+      });
+    });
+};
+
+export const removeFromCart = (pokemonId) => (dispatch) => {
+  dispatch({ type: LOADING_DATA });
+  axios
+    .post(`/pokemon/${pokemonId}/removeCart`)
+    .then(() => {
+      axios
+        .get("/user/cart")
+        .then((res) => {
+          dispatch({
+            type: SET_CART,
+            payload: res.data,
+          });
+          dispatch({ type: CLEAR_ERRORS });
+        })
+        .catch((error) => {
+          dispatch({
+            type: SET_ERRORS,
+            payload: error.response.data,
+          });
+        });
+    })
+    .catch((error) => {
+      dispatch({
+        type: SET_ERRORS,
+        payload: error.response.data,
+      });
+    });
+};
+
+const getCart = () => (dispatch) => {
+  axios
+    .get("/user/cart")
+    .then((res) => {
+      dispatch({
+        type: SET_CART,
+        payload: res.data,
+      });
+      dispatch({ type: CLEAR_ERRORS });
     })
     .catch((error) => {
       dispatch({

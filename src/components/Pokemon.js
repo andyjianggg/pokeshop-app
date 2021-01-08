@@ -1,5 +1,9 @@
 import React, { Component } from "react";
-import jwtDecode from "jwt-decode";
+import PropTypes from "prop-types";
+
+// Redux
+import { connect } from "react-redux";
+import { handleCart } from "../redux/actions/dataActions";
 
 // MUI
 import Card from "@material-ui/core/Card";
@@ -40,37 +44,34 @@ class Pokemon extends Component {
   constructor() {
     super();
     this.state = {
-      disableButton: true,
+      inCart: false,
     };
   }
 
-  handleClick = (event) => {
-    const token = localStorage.userIdToken;
-    const decodedToken = jwtDecode(token);
-    const userEmail = decodedToken.email;
-    let cart = JSON.parse(localStorage.getItem(userEmail) || "[]");
-    cart.push(this.props.pokemon);
-    localStorage.setItem(userEmail, JSON.stringify(cart));
-    const item = localStorage.getItem(userEmail);
-    const parsedItem = JSON.parse(item);
+  handleClick = () => {
+    this.state.inCart
+      ? this.props.handleCart(this.props.pokemon.pokemonId, "removeCart")
+      : this.props.handleCart(this.props.pokemon.pokemonId, "addCart");
     this.setState({
-      disableButton: true,
+      inCart: !this.state.inCart,
     });
   };
 
   componentDidMount() {
-    const userEmail = localStorage.userEmail;
+    const {
+      data: { cart },
+      authenticated,
+    } = this.props;
     let pokemon;
-    if (userEmail) {
-      const cart = JSON.parse(localStorage.getItem(userEmail) || "[]");
+    if (authenticated) {
       for (pokemon of cart) {
         if (pokemon.pokemonId === this.props.pokemon.pokemonId) {
+          this.setState({
+            inCart: true,
+          });
           return;
         }
       }
-      this.setState({
-        disableButton: false,
-      });
     }
   }
 
@@ -109,9 +110,11 @@ class Pokemon extends Component {
             color="secondary"
             className={classes.button}
             onClick={this.handleClick}
-            disabled={this.state.disableButton}
+            style={{
+              visibility: this.props.authenticated ? "visible" : "hidden",
+            }}
           >
-            Add to Cart
+            {this.state.inCart ? "Remove from Cart" : "Add to Cart"}
           </Button>
         </CardActions>
       </Card>
@@ -119,4 +122,24 @@ class Pokemon extends Component {
   }
 }
 
-export default withStyles(styles)(Pokemon);
+Pokemon.propTypes = {
+  classes: PropTypes.object.isRequired,
+  handleCart: PropTypes.func.isRequired,
+  data: PropTypes.object.isRequired,
+  UI: PropTypes.object.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  authenticated: state.user.authenticated,
+  data: state.data,
+  UI: state.UI,
+});
+
+const mapActionsToProps = {
+  handleCart,
+};
+
+export default connect(
+  mapStateToProps,
+  mapActionsToProps
+)(withStyles(styles)(Pokemon));

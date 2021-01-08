@@ -12,3 +12,4 @@ export const CLEAR_ERRORS = "CLEAR_ERRORS";
 // Data reducer types
 export const SET_POKEMON = "SET_POKEMON";
 export const LOADING_DATA = "LOADING_DATA";
+export const SET_CART = "SET_CART";

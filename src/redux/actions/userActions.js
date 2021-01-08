@@ -1,5 +1,4 @@
 import axios from "axios";
-import jwtDecode from "jwt-decode";
 import {
   SET_USER,
   SET_ERRORS,
@@ -49,7 +48,6 @@ export const signupUser = (newUserData, history) => (dispatch) => {
 
 export const logoutUser = () => (dispatch) => {
   localStorage.removeItem("userIdToken");
-  localStorage.removeItem("userEmail");
   delete axios.defaults.headers.common["Authorization"];
   dispatch({ type: SET_UNAUTHENTICATED });
 };
@@ -69,7 +67,5 @@ export const getUserData = () => (dispatch) => {
 const setAuthorizationHeader = (token) => {
   const userIdToken = `Bearer ${token}`;
   localStorage.setItem("userIdToken", userIdToken);
-  const decodedToken = jwtDecode(userIdToken);
-  localStorage.setItem("userEmail", decodedToken.email);
   axios.defaults.headers.common["Authorization"] = userIdToken;
 };
