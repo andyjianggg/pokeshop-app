@@ -91,6 +91,7 @@ class Navbar extends Component {
           </Button>
           <Menu
             id="types-menu"
+            className={classes.menu}
             anchorEl={this.state.anchorEl}
             keepMounted
             open={Boolean(this.state.anchorEl)}
