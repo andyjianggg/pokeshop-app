@@ -43,5 +43,14 @@ export default {
     progress: {
       position: "absolute",
     },
+    navButtons: {
+      margin: "auto 30px auto 30px",
+    },
+    searchField: {
+      marginLeft: 100,
+    },
+    menuItem: {
+      margin: "auto 25px auto 25px",
+    },
   },
 };

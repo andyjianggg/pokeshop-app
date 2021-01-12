@@ -15,9 +15,15 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import Button from "@material-ui/core/Button";
 
 const typeColours = {
-  Fire: "#f6685e",
-  Water: "#4dabf5",
-  Grass: "#6fbf73",
+  Fire: "#ff4569",
+  Water: "#5393ff",
+  Grass: "#00e676",
+  Electric: "#ffea00",
+  Fighting: "#ff6333",
+  Normal: "#BDBDBD",
+  Psychic: "#f73378",
+  Dark: "#834bff",
+  Dragon: "#dd33fa",
 };
 
 const styles = {

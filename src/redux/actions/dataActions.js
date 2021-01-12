@@ -8,10 +8,6 @@ import {
 } from "../types";
 import axios from "axios";
 
-const hello = () => {
-  console.log("hello");
-};
-
 // Get all pokemon
 export const getPokemon = (authenticated) => (dispatch) => {
   dispatch({ type: LOADING_DATA });
@@ -23,7 +19,6 @@ export const getPokemon = (authenticated) => (dispatch) => {
         payload: res.data,
       });
       if (authenticated) {
-        hello();
         dispatch({ type: LOADING_DATA });
         axios
           .get("/user/cart")
@@ -146,6 +141,20 @@ const getCart = () => (dispatch) => {
         payload: res.data,
       });
       dispatch({ type: CLEAR_ERRORS });
+    })
+    .catch((error) => {
+      dispatch({
+        type: SET_ERRORS,
+        payload: error.response.data,
+      });
+    });
+};
+
+export const checkout = () => (dispatch) => {
+  axios
+    .post("/user/checkout")
+    .then(() => {
+      getPokemon(true);
     })
     .catch((error) => {
       dispatch({
