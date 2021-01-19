@@ -67,6 +67,7 @@ class Sidebar extends Component {
     super();
     this.state = {
       dialogOpen: false,
+      dialogBadOpen: false,
     };
   }
 
@@ -77,8 +78,16 @@ class Sidebar extends Component {
   handleClose = () => {
     this.setState({
       dialogOpen: false,
+      dialogBadOpen: false,
     });
     this.props.history.push("/");
+  };
+
+  handleBadClose = () => {
+    this.setState({
+      dialogOpen: false,
+      dialogBadOpen: false,
+    });
   };
 
   handleCheckout = () => {
@@ -93,6 +102,10 @@ class Sidebar extends Component {
       this.setState({
         dialogOpen: true,
       });
+    } else {
+      this.setState({
+        dialogBadOpen: true,
+      });
     }
   };
 
@@ -106,7 +119,7 @@ class Sidebar extends Component {
     let totalCost = 0;
     let pokemon;
     for (pokemon of cart) {
-      totalCost = totalCost + pokemon.cost;
+      totalCost = totalCost + parseInt(pokemon.cost);
     }
     const purchaseDiff = userInfo.userCredits - totalCost;
 
@@ -158,6 +171,27 @@ class Sidebar extends Component {
               <DialogActions>
                 <Button component={Link} to="/" color="primary" autoFocus>
                   Continue shopping
+                </Button>
+              </DialogActions>
+            </Dialog>
+            <Dialog
+              open={this.state.dialogBadOpen}
+              onClose={this.handleBadClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">
+                {"Unable to checkout!"}
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  Your purchase has not been processed due to insufficient
+                  credits. Please add more credits and try again.
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={this.handleBadClose} color="primary" autoFocus>
+                  OK
                 </Button>
               </DialogActions>
             </Dialog>

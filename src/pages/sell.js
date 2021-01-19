@@ -27,7 +27,7 @@ class sell extends Component {
       pokedexId: "",
       pokemonType: "",
       pokemonRegion: "",
-      pokemonPrice: "",
+      pokemonPrice: 0,
       pokemonNature: "",
       pokemonImage: "",
       errors: [],

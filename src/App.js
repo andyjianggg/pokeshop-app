@@ -26,6 +26,9 @@ import sell from "./pages/sell";
 
 const theme = createMuiTheme(themeFile);
 
+axios.defaults.baseURL =
+  "https://us-central1-pokeshop-b151b.cloudfunctions.net/api";
+
 const token = localStorage.userIdToken;
 if (token) {
   const decodedToken = jwtDecode(token);
